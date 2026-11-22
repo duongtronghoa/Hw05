@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 380" role="img" aria-label="Continuous performance testing flow">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#44637a"/></marker>
+    <style>
+      .box { fill: #e9f3fa; stroke: #39719a; stroke-width: 2; rx: 10; }
+      .decision { fill: #fff3db; stroke: #af7c1e; stroke-width: 2; }
+      .alert { fill: #ffe8e6; stroke: #aa4f4a; stroke-width: 2; rx: 10; }
+      .line { fill: none; stroke: #44637a; stroke-width: 2; marker-end: url(#arrow); }
+      text { font-family: Arial, sans-serif; font-size: 21px; fill: #153047; text-anchor: middle; dominant-baseline: middle; }
+      .small { font-size: 17px; }
+    </style>
+  </defs>
+  <rect class="box" x="20" y="25" width="145" height="70"/><text x="92" y="60">Commit/PR</text>
+  <path class="line" d="M165 60 H205"/>
+  <polygon class="decision" points="275,20 345,60 275,100 205,60"/><text class="small" x="275" y="60">API/DB đổi?</text>
+  <path class="line" d="M345 60 H385"/>
+  <rect class="box" x="385" y="25" width="145" height="70"/><text x="457" y="60">Seed cố định</text>
+  <path class="line" d="M530 60 H570"/>
+  <rect class="box" x="570" y="25" width="145" height="70"/><text x="642" y="60">Smoke 1 VU</text>
+  <path class="line" d="M715 60 H755"/>
+  <rect class="box" x="755" y="25" width="145" height="70"/><text x="827" y="60">Load ngắn</text>
+  <path class="line" d="M900 60 H940"/>
+  <polygon class="decision" points="1010,20 1080,60 1010,100 940,60"/><text class="small" x="1010" y="60">p95/lỗi tăng?</text>
+  <path class="line" d="M1010 100 V145 H882"/><text class="small" x="940" y="132">Có</text>
+  <rect class="box" x="740" y="145" width="142" height="70"/><text x="811" y="180">Chạy lại</text>
+  <path class="line" d="M740 180 H670"/>
+  <rect class="alert" x="480" y="145" width="190" height="70"/><text x="575" y="180">Cảnh báo/review</text>
+  <path class="line" d="M1010 100 V260 H1040"/><text class="small" x="1065" y="125">Không</text>
+  <rect class="box" x="1040" y="225" width="135" height="70"/><text x="1107" y="260">Lưu báo cáo</text>
+  <rect class="box" x="20" y="265" width="145" height="70"/><text x="92" y="300">Nightly</text>
+  <path class="line" d="M165 300 H210"/>
+  <rect class="box" x="210" y="265" width="240" height="70"/><text x="330" y="300">Stress/Spike/Soak</text>
+  <path class="line" d="M450 300 H500 V215"/>
+  <text class="small" x="598" y="345">Cùng runner, cùng dữ liệu, JTL gốc và resource CSV cho mỗi lượt</text>
+</svg>

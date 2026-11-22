@@ -40,7 +40,8 @@ def main() -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
     body = markdown.markdown(source.read_text(encoding="utf-8"), extensions=["tables", "fenced_code", "toc"])
     title = html.escape(source.stem)
-    page = f'<!doctype html><html lang="vi"><head><meta charset="utf-8"><title>{title}</title><style>{CSS}</style></head><body>{body}</body></html>'
+    base_uri = source.parent.as_uri() + "/"
+    page = f'<!doctype html><html lang="vi"><head><meta charset="utf-8"><base href="{base_uri}"><title>{title}</title><style>{CSS}</style></head><body>{body}</body></html>'
     with tempfile.TemporaryDirectory(prefix="hw05_pdf_") as temp:
         temp_dir = Path(temp)
         html_file = temp_dir / "input.html"
