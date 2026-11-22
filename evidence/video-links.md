@@ -9,4 +9,4 @@
 
 | Nội dung clip | URL Video Unlisted | Các phân cảnh đã tự kiểm chứng |
 |---|---|---|
-| **HW05 Performance Testing Full Demo** | https://youtu.be/lk0vSGCapsc | Máy TRONGHOA dxdiag, Load CLI + Resource Monitor, Stress 4 tầng 80 VU, Spike 3 phase hồi phục, Soak 11 phút trần RAM ~96,5 MiB, AI Critique tiếng Việt, Agent Skill Read-heavy demo |
+| **HW05 Performance Testing Full Demo** | https://youtu.be/lk0vSGCapsc | Theo mô tả của sinh viên: máy TRONGHOA dxdiag, Load CLI + Resource Monitor, Stress 4 tầng 80 VU, Spike 3 phase, Soak 11 phút với Private Bytes cao nhất quan sát ~96,45 MiB, AI Critique tiếng Việt, Agent Skill Read-heavy demo. Nội dung và giọng thuyết minh cần sinh viên tự xác nhận trước khi nộp. |

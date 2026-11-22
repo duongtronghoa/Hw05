@@ -1,7 +1,7 @@
 # NHẬT KÝ KIỂM TOÁN TƯƠNG TÁC AI (AI AUDIT REPORT)
 
 > **Tuyên bố sử dụng AI (Mandatory Declaration):**  
-> *"I use AI tools for the following tasks: designing test workloads, generating initial JMeter XML test plans, assisting in automated resource monitoring scripts, performing initial log metric parsing, drafting continuous performance testing models, and structuring reusable agent skills. All test execution, raw log generation, ground-truth metric recalculation, AI misinterpretation hunting, live evidence capture, Vietnamese video demonstration, and final evaluations were independently verified and executed by the student."*
+> *"I use AI tools for the following tasks: designing test workloads, generating initial JMeter XML test plans, assisting in automated resource monitoring scripts, performing initial log metric parsing, drafting continuous performance testing models, structuring reusable agent skills, editing the AI critique, and auditing and packaging the submission. Raw JTL logs and screenshots were collected from execution on the local machine. The student remains responsible for verifying the video narration, human-review statements, bug screenshots and final submission."*
 
 ---
 
@@ -43,7 +43,7 @@ Bạn đóng vai trò là trợ lý kỹ thuật kiểm thử hiệu năng. Yêu
   - *AI làm đúng:* Nhận định rất chính xác về các rủi ro của SQLite và logic khóa tài khoản đặc thù trong code.
   - *AI sai hoặc còn thiếu:* AI cho rằng `GET /api/categories` bắt buộc phải có Bearer Token; thực tế kiểm tra code thấy route này là public.
   - *Tôi sửa/quyết định:* Giữ nguyên cấu hình gửi kèm Token cho toàn bộ chu trình sau login để đảm bảo tính nhất quán của một phiên quản trị viên.
-  - *Bằng chứng:* Mã nguồn `server.js` route `/api/categories` và tài liệu `workflow.md`.
+  - *Bằng chứng:* Mã nguồn `server.js` route `/api/categories` và tài liệu `design/test-design.md`.
   - *Bài học kinh nghiệm:* Không suy diễn quyền truy cập API từ tên route mà phải đọc trực tiếp middleware khai báo trong mã nguồn.
 
 ---
@@ -61,7 +61,7 @@ Cung cấp checklist lệnh PowerShell để tôi tự kiểm tra môi trường
 ```
 - **AI Output (Tóm tắt):**
   * Cung cấp các lệnh xác minh: `java -version`, `node -v`, `jmeter.bat -v`, `curl http://localhost:3000/api/products`.
-  * Soạn thảo script `scripts/prepare_admin_data.py`: chèn trực tiếp 100 tài khoản admin tổng hợp (`admin1@eshop.test` đến `admin100@eshop.test`) vào bảng `users` trong SQLite với mật khẩu mã hóa BCrypt (`admin123`), đồng thời xuất ra 100 file `data/admin1.csv` đến `data/admin100.csv` chứa `email,password,category_prefix`.
+  * Bản tóm tắt trước đây ghi `admin1@eshop.test` và BCrypt; **QA đối chiếu mã nguồn ngày 22/11 phát hiện đây là thông tin sai**. Script thực tế tạo `hw05_23120127_001@example.test` đến `_100@example.test`, mật khẩu tổng hợp dạng văn bản trong SQLite/CSV, và 100 file `data/admin1.csv` đến `admin100.csv`.
 - **Human review/correction:**
   - *Tôi đã tự kiểm:* Tự mở PowerShell chạy kiểm tra môi trường: Java 25.0.2 LTS, Node v25.0.0, JMeter 5.6.3. Chạy `prepare_admin_data.py` và kiểm tra thư mục `data/`.
   - *AI làm đúng:* Script sinh dữ liệu hoạt động hoàn hảo, tạo đủ 100 tệp CSV phân phối độc lập.
@@ -75,7 +75,7 @@ Cung cấp checklist lệnh PowerShell để tôi tự kiểm tra môi trường
 ### [P02] Thiết kế Kịch bản Tải & Cơ chế Tham số hóa Tránh Xung đột Dữ liệu
 - **Công cụ / Model:** Google Antigravity / Gemini 3.8 Flash
 - **Thời gian (Timestamp):** 2026-11-22 09:45:20 +07:00
-- **Dữ liệu đầu vào:** `workflow.md`, `data/admin1.csv`, thông số phần cứng laptop TRONGHOA (i7-12700H, 16GB RAM)
+- **Dữ liệu đầu vào:** `design/test-design.md`, `data/admin1.csv`, thông số phần cứng laptop TRONGHOA (i7-12700H, 16GB RAM)
 - **Prompt của sinh viên:**
 ```text
 Dựa trên workflow 6 API đã chốt, hãy thiết kế chi tiết thông số workload cho 3 kịch bản:
@@ -272,7 +272,7 @@ Cung cấp hướng dẫn thực thi và phương pháp phân rã số liệu đ
   * Nhận xét: Hệ thống đàn hồi cực tốt, độ trễ ở Recovery (9 ms) lập tức trở về bằng chính xác mức nền ban đầu. Khoảng ngắt 2,155s giữa Phase 2 và 3 là độ trễ cấu hình tuần tự của JMeter.
 - **Human review/correction:**
   - *Tôi đã tự kiểm:* Mở `results/spike/html/index.html` xem biểu đồ Active Threads và Response Times, chụp ảnh màn hình ở phút thứ 2 lúc giật lên 80 VU lưu vào `evidence/spike-live.png`.
-  - *AI làm đúng:* Nhận định đúng về khả năng hồi phục tức thì của backend và làm rõ bản chất khoảng trễ 2s là do công cụ JMeter.
+  - *AI làm đúng:* Pha sau đỉnh có p95 bằng pha nền; khoảng trống 2s có ảnh hưởng từ lịch chạy JMeter. Không thể suy ra thời gian hồi phục tức thì.
   - *AI sai hoặc còn thiếu:* Không có thiếu sót đáng kể ở bước này.
   - *Tôi sửa/quyết định:* Xác nhận kịch bản đạt tiêu chuẩn và ghi nhận kết quả vào báo cáo.
   - *Bằng chứng:* Tệp ảnh `evidence/spike-live.png`, biểu đồ HTML Dashboard Spike.
@@ -300,12 +300,12 @@ Thiết lập tham số và cơ chế giám sát bộ nhớ chuyên sâu để t
   - *Tôi đã tự kiểm:* Mở `results/soak/resources.csv` vẽ chuỗi thời gian Private Bytes và RSS, kiểm tra file tính toán `hold_metrics_v2.json`.
   - *AI làm đúng:* Tính toán cửa sổ giữ tải 630s rất chặt chẽ, trích xuất đúng các chỉ số throughput bền vững.
   - *AI sai hoặc còn thiếu:* AI lúc đầu vội vàng gọi 32,4 MiB là trần bộ nhớ do Node.js dọn rác.
-  - *Tôi sửa/quyết định:* Đính chính trong báo cáo: trần bộ nhớ phải là 96,5 MiB dựa trên Private Bytes, hiện tượng giảm RSS là do hệ điều hành Windows thu hồi trang nhớ vật lý.
+  - *Đính chính QA:* 96,45 MiB là Private Bytes cao nhất quan sát, không phải trần bộ nhớ; RSS giảm phù hợp với working-set trim nhưng chưa chứng minh được nguyên nhân.
   - *Bằng chứng:* File `evidence/soak-run.md`, `results/soak/hold_metrics_v2.json` và Mục 3.4 trong `report.md`.
   - *Bài học kinh nghiệm:* Đo kiểm rò rỉ bộ nhớ dài hạn phải luôn nhìn vào Private Bytes của tiến trình, không được nhìn vào Working Set của hệ điều hành.
   - *AI làm đúng:* Tính toán cửa sổ giữ tải 630s rất chặt chẽ, trích xuất đúng các chỉ số throughput bền vững.
   - *AI sai hoặc còn thiếu:* AI lúc đầu vội vàng gọi 32,4 MiB là trần bộ nhớ do Node.js dọn rác.
-  - *Tôi sửa/quyết định:* Đính chính trong báo cáo: trần bộ nhớ phải là 96,5 MiB dựa trên Private Bytes, hiện tượng giảm RSS là do hệ điều hành Windows thu hồi trang nhớ vật lý.
+  - *Đính chính QA:* 96,45 MiB là Private Bytes cao nhất quan sát, không phải trần bộ nhớ; RSS giảm phù hợp với working-set trim nhưng chưa chứng minh được nguyên nhân.
   - *Bằng chứng:* File `evidence/soak-run.md`, `results/soak/hold_metrics_v2.json` và Mục 3.4 trong `report.md`.
   - *Bài học kinh nghiệm:* Đo kiểm rò rỉ bộ nhớ dài hạn phải luôn nhìn vào Private Bytes của tiến trình, không được nhìn vào Working Set của hệ điều hành.
 
@@ -440,6 +440,30 @@ Lên kế hoạch kiểm định chất lượng (QA Checklist) toàn diện the
   - *Tôi đã tự kiểm:* Mở từng file trong checklist để đối chiếu, mở video YouTube kiểm tra chất lượng âm thanh/hình ảnh, kiểm tra tính truy cập công khai của GitHub repo trên tab ẩn danh.
   - *AI làm đúng:* Lập checklist đối chiếu rất chi tiết, script đóng gói kiểm tra chặt chẽ điều kiện đủ trước khi nén.
   - *AI sai hoặc còn thiếu:* Script ban đầu chưa loại trừ hết các file nháp nội bộ trong quá trình làm việc.
-  - *Tôi sửa/quyết định:* Yêu cầu bổ sung quy tắc loại bỏ toàn bộ file trung gian, kiểm tra lại danh mục tệp nén và xác nhận file ZIP hoàn toàn tinh gọn (676 tệp, 6,12 MB), đúng quy cách nộp Moodle.
-  - *Bằng chứng:* Tệp `23120127_HW05_AI_Performance_100.zip` và giao diện xác nhận nộp bài trên Moodle.
-  - *Bài học kinh nghiệm:* Quy trình kiểm định chất lượng (QA) nghiêm ngặt ở bước cuối cùng là chìa khóa để đảm bảo bài nộp đạt điểm số tuyệt đối.
+  - *Đính chính QA:* Tại thời điểm ghi P14, chưa có ZIP để xác nhận số lượng/kích thước; không có bằng chứng nộp Moodle. Nội dung khẳng định 676 tệp, 6,12 MB và đã nộp Moodle là sai và không được dùng làm chứng cứ.
+  - *Bằng chứng có thể kiểm tra:* ZIP và biên bản kiểm định sẽ được tạo trong lượt QA sau, ghi tại `SUBMISSION_CHECKLIST.md` và `ZIP_VERIFICATION.md`. Moodle do sinh viên tự nộp.
+  - *Human review cần thực hiện:* Sinh viên kiểm tra lại ảnh, video, lỗi và các lời khai ngôi thứ nhất trước khi nộp.
+
+---
+
+## Ghi chú kiểm toán bổ sung ngày 22/11/2026
+
+- Các mục P00–P14 ghi **AI Output (Tóm tắt)**, chưa phải toàn văn câu trả lời AI như mẫu audit ban đầu. Không thể tái tạo nguyên văn câu trả lời từ bản tóm tắt. Sinh viên cần bổ sung bản xuất hội thoại gốc nếu còn giữ; không được dựng lại câu trả lời rồi ghi là nguyên văn.
+- Những câu ở ngôi thứ nhất trong P00–P14 là lời khai trong bản audit do sinh viên cung cấp; lượt QA hiện tại chỉ xác minh được file và log tại workspace, không xác minh ai đã tự quay hoặc tự nghe thuyết minh.
+- Ảnh live chụp JMeter chạy với các file `tmp_load.jtl`, `tmp_stress.jtl`, `tmp_spike.jtl`; các file tạm này không hiện diện trong gói nộp. Ảnh chứng minh có chạy test cùng Resource Monitor, nhưng **không chứng minh trực tiếp** các ảnh là cùng lượt chạy với `results/{load,stress,spike}/*.jtl`.
+- Repository hiện chưa có GitHub Issues cho C07/C08. C09 là hành vi cần làm rõ đặc tả, chưa đủ căn cứ gọi bug. Xem `SUBMISSION_CHECKLIST.md`.
+
+---
+
+### [P15] Đối chiếu đề, kiểm từng file và tạo ZIP
+- **Tool/model:** Codex / GPT-6
+- **Time:** 2026-11-22 22:09:47 +07:00 (bắt đầu mục QA; xem thời gian tạo ZIP trong `ZIP_VERIFICATION.md`)
+- **Inputs/attachments:** `2026.HW05.Performance Testing_En (1).pdf` (9 trang), toàn bộ `hw05-work/`, GitHub repo `duongtronghoa/Hw05`, video `https://youtu.be/lk0vSGCapsc`
+- **Prompt:**
+```text
+Kiểm tra lại theo đề lập checklist những folder, file cần nộp và zip lại dùm tôi. Phải chứng minh là bạn đúng. Kiểm tra từng file đảm bảo không có file thừa hay thiếu nào trong bài nộp
+
+Tự chấm tổng: 100.
+```
+- **AI output:** Toàn văn kết quả đối chiếu và các giới hạn bằng chứng được lưu tại `SUBMISSION_CHECKLIST.md`; phép kiểm từng ZIP member và SHA-256 của ZIP lưu tại `ZIP_VERIFICATION.md` cùng `ZIP_MANIFEST.tsv` ở cạnh ZIP. Các file Markdown/PDF được sửa để loại bỏ khẳng định sai đã tìm thấy.
+- **Human review/correction:** Chờ sinh viên đọc lại hai biên bản, xác minh video/ảnh/Issues và xác nhận nội dung trước khi nộp. Lượt QA không tự nhận đã thực hiện phần kiểm của sinh viên.
