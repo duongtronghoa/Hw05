@@ -37,7 +37,7 @@
 ## 2. Rà soát Logic Điều khiển, Scope và Assertions
 
 1. **Phạm vi Timer (Think Time):**
-   - Đặt `UniformRandomTimer` (trễ 1000ms, biên độ 2000ms $\rightarrow$ khoảng 1–3s) tại cấp Thread Group. Mọi request trước khi gửi đi đều dừng chờ ngẫu nhiên, mô phỏng đúng hành vi người dùng thật.
+   - Đặt `UniformRandomTimer` (trễ 1000ms, biên độ 2000ms → khoảng 1–3s) tại cấp Thread Group. Mọi request trước khi gửi đi đều dừng chờ ngẫu nhiên, mô phỏng đúng hành vi người dùng thật.
 2. **Phân nhánh xử lý lỗi JWT (Logic tránh lockout):**
    - Sau sampler `01_login`, token được trích xuất qua `JSONPostProcessor` vào biến `token` với giá trị mặc định `NOT_FOUND`.
    - Một bộ điều khiển `IfController` với biểu thức `"${token}" != "NOT_FOUND" && "${token}" != ""` bao bọc các sampler từ 02 đến 06. Nếu đăng nhập thất bại, luồng bỏ qua các bước ghi, đồng thời Thread Group có cờ `on_sample_error=startnextloop` chuyển ngay sang iteration kế tiếp, tránh phát sinh hàng loạt lỗi 401 và ngăn tài khoản bị khóa trong 180s.

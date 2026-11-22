@@ -89,3 +89,4 @@ Based on the measurements:
    The login query `SELECT * FROM users WHERE email = ?` currently performs a full table scan. Adding an index on `users(email)` will optimize authentication latency under larger user datasets.
 5. **Adjust Think-Time Distribution:**
    Reduce the 1–3s artificial think time to 100–300 ms to find the absolute saturation breakpoint of the Node.js event loop.
+

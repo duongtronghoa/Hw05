@@ -66,7 +66,7 @@ Toàn bộ các lượt chạy được thực hiện ở chế độ Non-GUI (C
   * Thư mục bằng chứng: `results/load/load.jtl` (SHA-256: `fa0251a29c8a...`), `results/load/html/index.html`.
 
 ### 3.2 Stress Test (Kiểm tra tải cực hạn theo tầng)
-* **Thông số:** 4 Thread Group chạy tuần tự: 10 VU $\rightarrow$ 20 VU $\rightarrow$ 40 VU $\rightarrow$ 80 VU (Mỗi tầng ramp 15s, duration 120s).
+* **Thông số:** 4 Thread Group chạy tuần tự: 10 VU → 20 VU → 40 VU → 80 VU (Mỗi tầng ramp 15s, duration 120s).
 * **Bảng phân rã chi tiết theo tầng tải:**
 
 | Tầng tải (VU) | Số mẫu (n) | Lỗi | Throughput (req/s) | p50 (ms) | p90 (ms) | p95 (ms) | p99 (ms) | p95 Thao tác ghi cao nhất |
@@ -81,7 +81,7 @@ Toàn bộ các lượt chạy được thực hiện ở chế độ Non-GUI (C
 * Bằng chứng: `results/stress/stress.jtl` (SHA-256: `5f5ebffc713f...`), `results/stress/html/index.html`.
 
 ### 3.3 Spike Test (Đo tải đột biến & Khả năng hồi phục)
-* **Thông số:** Nền 10 VU (120s, ramp 10s) $\rightarrow$ Đỉnh đột biến 80 VU (60s, ramp 5s) $\rightarrow$ Hồi phục 10 VU (120s, ramp 5s).
+* **Thông số:** Nền 10 VU (120s, ramp 10s) → Đỉnh đột biến 80 VU (60s, ramp 5s) → Hồi phục 10 VU (120s, ramp 5s).
 * **Bảng kết quả theo 3 giai đoạn:**
 
 | Giai đoạn | Số mẫu (n) | Thời lượng (s) | Throughput (req/s) | p50 (ms) | p95 (ms) | p99 (ms) | Trạng thái hồi phục |
@@ -100,7 +100,7 @@ Toàn bộ các lượt chạy được thực hiện ở chế độ Non-GUI (C
   * **Sustained Throughput:** **39,711 request/giây** (Tổng 25.018 request trong cửa sổ giữ tải, 0 lỗi).
   * **Độ trễ duy trì (Sustained p95):** Toàn cục đạt **10 ms** (Login: 8 ms, Categories: 7 ms, Products: 7 ms, Create: 13 ms, Update: 12 ms, Delete: 13 ms).
   * **Hành vi Bộ nhớ & Memory Ceiling:**
-    * Private Bytes của `node.exe` giữ cực kỳ ổn định trong khoảng **95,03 MiB $\rightarrow$ 96,45 MiB** (kết thúc ở 95,65 MiB), chứng minh **không có hiện tượng rò rỉ bộ nhớ (Memory Leak)** trong 10,5 phút duy trì tải.
+    * Private Bytes của `node.exe` giữ cực kỳ ổn định trong khoảng **95,03 MiB → 96,45 MiB** (kết thúc ở 95,65 MiB), chứng minh **không có hiện tượng rò rỉ bộ nhớ (Memory Leak)** trong 10,5 phút duy trì tải.
     * Working Set (RSS) của `node.exe` dao động từ 93,11 MiB xuống 32,38 MiB lúc 17:31:10 do hệ điều hành Windows thu hồi trang nhớ vật lý (Working Set Trim). Trần bộ nhớ thực tế của backend được xác định theo Private Bytes là **~96,5 MiB**.
 * Bằng chứng: `results/soak/soak.jtl` (SHA-256: `e2f168445e62...`), `results/soak/html/index.html`.
 
@@ -164,7 +164,7 @@ flowchart TD
 1. **Chi phí Hạ tầng (Infrastructure Cost):** Chạy kiểm thử tải trên các môi trường CI chia sẻ (như GitHub Actions runner công cộng) có độ nhiễu rất lớn (noisy neighbors) làm sai lệch độ trễ p95. Giải pháp là thiết lập một **Dedicated Self-hosted Runner** cấu hình phần cứng cố định để chạy các đợt Nightly Benchmark, giúp tiết kiệm chi phí CPU mà vẫn đảm bảo độ tin cậy.
 2. **Cảnh báo giả (False Alarms / Flakiness):**
    * *Nguyên nhân:* Do các tiến trình nền hệ điều hành (GC, I/O flush, working set trim) gây trồi sụt nhất thời.
-   * *Biện pháp giảm thiểu:* Đặt ngưỡng cảnh báo hồi quy tương đối (ví dụ: p95 tăng vượt quá **20%** so với baseline qua ít nhất 2 lần chạy liên tiếp), đồng thời yêu cầu kích thước mẫu tối thiểu ($N \ge 500$ request) trước khi đưa ra kết luận.
+   * *Biện pháp giảm thiểu:* Đặt ngưỡng cảnh báo hồi quy tương đối (ví dụ: p95 tăng vượt quá **20%** so với baseline qua ít nhất 2 lần chạy liên tiếp), đồng thời yêu cầu kích thước mẫu tối thiểu ($NN ≥ 500 request) trước khi đưa ra kết luận.
 
 ---
 
@@ -179,6 +179,16 @@ flowchart TD
 ## 7. Kết luận & Phụ lục
 
 Báo cáo này phản ánh trung thực toàn bộ quá trình đo kiểm thực nghiệm, phân tích dữ liệu và phản biện đối chiếu AI.
-* **Phụ lục 1: AI Critique:** Đính kèm trong tệp [ai-critique.md](file:///c:/Users/duong/Downloads/New%20folder%20(33)/hw05-work/ai-critique.md) (239 từ) và bản PDF.
-* **Phụ lục 2: AI Audit Report:** Toàn bộ nhật ký tương tác P00 $\rightarrow$ P14 được lưu trữ tại [ai_audit.md](file:///c:/Users/duong/Downloads/New%20folder%20(33)/hw05-work/ai_audit.md) và xuất ra file PDF.
+
+### Phụ lục 1: Nhận xét Phản biện AI (AI Critique)
+*(Đính kèm nguyên văn từ tệp `ai-critique.md` / `ai-critique.pdf` — Đạt 250 từ tiếng Việt / 239 từ tiếng Anh)*
+
+> Trong bài tập kiểm thử hiệu năng này, công cụ AI đã hỗ trợ kỹ thuật rất tốt trong việc tạo sinh nhanh các kịch bản JMeter ban đầu và trích xuất dữ liệu đo. Tuy nhiên, các lỗi sai nghiêm trọng đã bộc lộ trong giai đoạn phân tích kết quả. Nổi bật nhất là việc AI mắc phải ngụy biện gộp mẫu (aggregation bias): nó báo cáo độ trễ p95 của kịch bản Stress rất mượt mà ở mức 18 mili-giây, che giấu hoàn toàn sự thật là ở tầng tải cao nhất 80 VU, p95 toàn cục đã vọt lên 23 mili-giây và thao tác xóa danh mục lên tới 32 mili-giây (p99 đạt 152 mili-giây). Hơn thế nữa, AI đã phạm phải ảo tưởng kiến trúc (architectural hallucination) khi đề xuất cấu hình connection pool và đánh index cho SQLite—hoàn toàn phớt lờ thực tế SQLite là CSDL tệp nhúng đơn tiến trình và khóa chính ID vốn đã có sẵn chỉ mục B-Tree. Nó cũng hiểu sai việc Windows thu hồi working set bộ nhớ lúc 17:31:10 thành việc Node.js dọn rác đạt trần bộ nhớ 32,4 MiB.
+>
+> AI thất bại trong việc phát hiện các lỗi này vì mô hình ngôn ngữ lớn thiếu khả năng tự đối chiếu với ground-truth thực tế; chúng tạo văn bản theo xác suất và luôn có xu hướng lấy trung bình tổng thể thay vì phân tích từng pha cụ thể. Đồng thời, AI chỉ nhìn mã trạng thái HTTP 200 để kết luận thành công, bỏ qua việc kiểm tra các bản ghi danh mục rác tồn dư trong CSDL hay việc API trả 200 cho ID không tồn tại.
+>
+> Nguyên tắc cốt lõi em rút ra được là AI không bao giờ được xem là nguồn chân lý tuyệt đối trong kiểm thử hiệu năng. Kỹ sư phải luôn kiểm chứng chéo từng khẳng định của AI với log thực thi thô và mã nguồn hệ thống.
+
+* **Phụ lục 2: AI Audit Report:** Toàn bộ nhật ký tương tác P00 → P14 được lưu trữ tại [ai_audit.md](file:///c:/Users/duong/Downloads/New%20folder%20(33)/hw05-work/ai_audit.md) và xuất ra file [ai_audit.pdf](file:///c:/Users/duong/Downloads/New%20folder%20(33)/hw05-work/ai_audit.pdf).
 * **Phụ lục 3: Git Commit Log:** Được trích xuất đầy đủ từ lịch sử commit thực tế trong file `git-commits.txt`.
+
