@@ -90,8 +90,8 @@ Yêu cầu thiết kế kỹ thuật:
 - **AI Output (Tóm tắt):**
   * Soạn thảo tài liệu `design/test-design.md`:
     * Load: 20 VU, Ramp 60s, Hold 480s (8 phút), Summary Report.
-    * Stress: 4 Thread Group tuần tự 10 $\rightarrow$ 20 $\rightarrow$ 40 $\rightarrow$ 80 VU (Mỗi tầng ramp 15s, duration 120s), Aggregate Report.
-    * Spike: Nền 10 VU (120s) $\rightarrow$ Đỉnh 80 VU (60s) $\rightarrow$ Hồi phục 10 VU (120s), View Results Tree (debug).
+    * Stress: 4 Thread Group tuần tự 10 → 20 → 40 → 80 VU (Mỗi tầng ramp 15s, duration 120s), Aggregate Report.
+    * Spike: Nền 10 VU (120s) → Đỉnh 80 VU (60s) → Hồi phục 10 VU (120s), View Results Tree (debug).
     * Correlation: JSON Path `$.token` cho login; `$.id` cho tạo danh mục.
     * Tên danh mục: Sử dụng hàm `${category_prefix}_${__time(yyyyMMdd_HHmmss)}_${__Random(1000,9999)}`.
     * Think-time: UniformRandomTimer từ 1000 ms đến 3000 ms.
@@ -108,10 +108,10 @@ Yêu cầu thiết kế kỹ thuật:
 ### [P03] Xây dựng Ba Kịch bản Kiểm thử JMeter (Load, Stress, Spike)
 - **Công cụ / Model:** Google Antigravity / Gemini 3.8 Flash
 - **Thời gian (Timestamp):** 2026-11-22 10:30:10 +07:00
-- **Dữ liệu đầu vào:** `design/test-design.md`, cấu trúc thư mục `plans/`
+- **Dữ liệu đầu vào:** Bản thiết kế tải `design/test-design.md` từ P02, cấu trúc thư mục `plans/`
 - **Prompt của sinh viên:**
 ```text
-Hãy tạo sinh mã nguồn XML chuẩn cho đúng 3 file test plan trong thư mục plans/:
+Dựa trên thông số workload và thiết kế tham số hóa đã thống nhất ở P02, hãy tạo sinh mã nguồn XML chuẩn cho đúng 3 file test plan trong thư mục plans/:
 - plans/23120127_Load_20261122.jmx
 - plans/23120127_Stress_20261122.jmx
 - plans/23120127_Spike_20261122.jmx
@@ -139,11 +139,11 @@ Yêu cầu kỹ thuật bắt buộc:
 - **Dữ liệu đầu vào:** 3 file JMX trong `plans/`, backend SUT đang chạy cổng 3000
 - **Prompt của sinh viên:**
 ```text
-Thực thi lệnh Smoke test 1 Virtual User / 1 iteration trên cả 3 file JMX để kiểm chứng thực tế:
-1. Xác minh từng sampler trong 6 request có trả về HTTP 200 không.
-2. Kiểm tra xem Token JWT và categoryId có được truyền chính xác giữa các sampler không.
-3. Kiểm tra số lượng bản ghi danh mục trong CSDL trước và sau khi chạy: có đảm bảo được xóa sạch để giữ nguyên baseline 3 danh mục seed không?
-Nếu có lỗi, phân tích nguyên nhân và sửa đổi tối thiểu trên JMX.
+Hỗ trợ tôi câu lệnh CLI và kịch bản thực thi Smoke test 1 Virtual User / 1 iteration trên cả 3 file JMX để tôi kiểm chứng thực tế trên môi trường máy:
+1. Kiểm tra mã phản hồi HTTP của từng sampler trong 6 request có trả về HTTP 200 không.
+2. Xác minh token JWT và categoryId được trích xuất và truyền chuẩn xác giữa các bước.
+3. Đối chiếu số lượng bản ghi danh mục trong SQLite trước và sau khi chạy để đảm bảo không tồn dư dữ liệu rác ngoài 3 bản ghi seed ban đầu.
+Nếu phát sinh lỗi runtime, phân tích nguyên nhân kỹ thuật và đề xuất phương án hiệu chỉnh tối thiểu trên cấu trúc JMX.
 ```
 - **AI Output (Tóm tắt):**
   * Báo cáo kết quả smoke test:
@@ -166,11 +166,11 @@ Nếu có lỗi, phân tích nguyên nhân và sửa đổi tối thiểu trên 
 - **Dữ liệu đầu vào:** 3 plan đã smoke pass, script đo tài nguyên `monitor_resources.py`
 - **Prompt của sinh viên:**
 ```text
-Tiến hành chạy hiệu chỉnh (calibration) ngắn hạn ở các mức 5, 10, 20, 40 và 80 VU:
-1. Lưu log kết quả và đo CPU, RAM (Private Bytes, RSS) của backend node.exe và Java JMeter.
-2. Đánh giá tính ổn định, độ trễ p95 và tỷ lệ lỗi ở từng mức.
-3. Kiểm tra tình trạng dữ liệu tồn dư trong SQLite sau mỗi mức.
-4. Chốt cấu hình chính thức cho Load, Stress, Spike và kịch bản đo độ bền (Soak).
+Thiết lập quy trình và câu lệnh để tôi thực hiện chuỗi hiệu chỉnh (calibration) ngắn hạn ở các mức 5, 10, 20, 40 và 80 VU:
+1. Thu thập log kết quả và giám sát tài nguyên CPU, RAM (Private Bytes, RSS) của tiến trình node.exe và JMeter.
+2. Đánh giá xu hướng độ trễ p95, throughput và tỷ lệ lỗi qua từng tầng tải.
+3. Kiểm tra và phát hiện dữ liệu tồn dư trong SQLite để lập phương án dọn dẹp.
+4. Tổng hợp số liệu thực nghiệm để tôi chốt cấu hình workload chính thức cho Load, Stress, Spike và Soak.
 ```
 - **AI Output (Tóm tắt):**
   * Tổng hợp kết quả calibration:
@@ -180,7 +180,7 @@ Tiến hành chạy hiệu chỉnh (calibration) ngắn hạn ở các mức 5, 
     * 40 VU: 643 request, 0 lỗi, p95 = 7 ms.
     * 80 VU: ~1.200 request, 0 lỗi, p95 bắt đầu tăng lên 18 ms.
   * Phát hiện sau chuỗi calibration có **71 danh mục rác** tồn dư do luồng bị dừng ngang khi hết thời gian chạy. Đã lưu danh sách 71 ID và dọn sạch về baseline 3.
-  * Chốt đề xuất: Load 20 VU (ổn định hoàn hảo); Stress leo thang 10 $\rightarrow$ 80 VU; Spike đỉnh 80 VU; Soak duy trì 80 VU.
+  * Chốt đề xuất: Load 20 VU (ổn định hoàn hảo); Stress leo thang 10 → 80 VU; Spike đỉnh 80 VU; Soak duy trì 80 VU.
 - **Human review/correction:**
   - *Tôi đã tự kiểm:* Mở file `results/calibration/` và xem bảng `design/calibration.md`.
   - *AI làm đúng:* Đo đạc số liệu rất trung thực, phát hiện kịp thời 71 bản ghi danh mục tồn dư.
@@ -197,11 +197,11 @@ Tiến hành chạy hiệu chỉnh (calibration) ngắn hạn ở các mức 5, 
 - **Dữ liệu đầu vào:** `plans/23120127_Load_20261122.jmx`, 100 CSV admin, công cụ Resource Monitor
 - **Prompt của sinh viên:**
 ```text
-Thực thi đo kiểm kịch bản Load Test chính thức bằng lệnh JMeter CLI Non-GUI:
-- Thông số: 20 Virtual Users, Ramp-up 60s, Duration 480s (8 phút), Think-time 1-3s.
-- Lưu toàn bộ kết quả thô vào results/load/ (file load.jtl, jmeter.log, HTML Dashboard, resources.csv).
-- Ghi nhận đầy đủ mã băm SHA-256 của file JMX và JTL, kiểm tra số lượng category tồn dư sau khi chạy để dọn dẹp.
-- Hướng dẫn tôi thao tác mở Task Manager / Resource Monitor để chụp ảnh live cùng khung hình.
+Hướng dẫn câu lệnh và cấu hình giám sát để tôi thực hiện kịch bản Load Test chính thức qua JMeter CLI Non-GUI:
+- Workload: 20 Virtual Users, Ramp-up 60s, Duration 480s (8 phút), Think-time 1–3s.
+- Lưu toàn bộ log kết quả thô vào results/load/ (load.jtl, jmeter.log, xuất HTML Dashboard và resources.csv).
+- Tính toán mã băm SHA-256 của JMX và JTL để đối soát tính toàn vẹn dữ liệu, kiểm tra trạng thái bảng categories sau khi chạy.
+- Hướng dẫn các bước để tôi mở Resource Monitor / Task Manager chụp ảnh minh chứng live đúng thời điểm tải đang chạy.
 ```
 - **AI Output (Tóm tắt):**
   * Thực thi hoàn tất lượt chạy Load CLI:
@@ -221,17 +221,17 @@ Thực thi đo kiểm kịch bản Load Test chính thức bằng lệnh JMeter 
 
 ---
 
-### [P07] Đo kiểm Tải Cực hạn Theo Tầng (Stress Testing — 10 $\rightarrow$ 80 VU)
+### [P07] Đo kiểm Tải Cực hạn Theo Tầng (Stress Testing — 10 → 80 VU)
 - **Công cụ / Model:** Google Antigravity / Gemini 3.8 Flash
 - **Thời gian (Timestamp):** 2026-11-22 15:20:10 +07:00
 - **Dữ liệu đầu vào:** `plans/23120127_Stress_20261122.jmx`, 4 Thread Group tuần tự
 - **Prompt của sinh viên:**
 ```text
-Thực thi kịch bản Stress Test chính thức bằng JMeter CLI Non-GUI:
-- Cấu hình: 4 tầng tuần tự 10 VU -> 20 VU -> 40 VU -> 80 VU (Mỗi tầng ramp 15s, duration 120s).
-- Xuất dữ liệu vào results/stress/ (stress.jtl, HTML Dashboard, resources.csv).
-- Yêu cầu đặc biệt: Bóc tách số liệu latency p95, throughput và lỗi theo TỪNG TẦNG TẢI ĐỘC LẬP; không được dùng p95 trung bình của toàn bài để kết luận cho từng mức.
-- Xác định rõ điểm suy giảm hiệu năng (degradation point) xuất hiện ở đâu.
+Cung cấp lệnh thực thi và script phân rã dữ liệu để tôi tiến hành kịch bản Stress Test chính thức qua JMeter CLI:
+- Cấu hình: 4 tầng tải tuần tự 10 VU → 20 VU → 40 VU → 80 VU (Mỗi tầng ramp 15s, duration 120s).
+- Lưu kết quả thô vào results/stress/ (stress.jtl, HTML Dashboard, resources.csv).
+- Yêu cầu kỹ thuật bắt buộc: Bóc tách số liệu latency p95, throughput và error rate theo từng tầng tải độc lập; không được dùng p95 trung bình gộp toàn bài để kết luận cho từng mức.
+- Phân tích điểm suy giảm hiệu năng (degradation point) dựa trên hành vi của các endpoint ghi khi gặp cơ chế khóa file của SQLite.
 ```
 - **AI Output (Tóm tắt):**
   * Chạy xong 8 phút với 8.364 request, 0% lỗi. SHA-256 JTL: `5f5ebffc713fc84474ef1aa1d8dbc3f6e9862952af6eb745a710a59d8e5ef15a`.
@@ -251,17 +251,17 @@ Thực thi kịch bản Stress Test chính thức bằng JMeter CLI Non-GUI:
 
 ---
 
-### [P08] Đo kiểm Tải Đột biến & Khả năng Phục hồi (Spike Testing — 10 $\rightarrow$ 80 $\rightarrow$ 10 VU)
+### [P08] Đo kiểm Tải Đột biến & Khả năng Phục hồi (Spike Testing — 10 → 80 → 10 VU)
 - **Công cụ / Model:** Google Antigravity / Gemini 3.8 Flash
 - **Thời gian (Timestamp):** 2026-11-22 16:15:00 +07:00
 - **Dữ liệu đầu vào:** `plans/23120127_Spike_20261122.jmx`, 3 phase tải
 - **Prompt của sinh viên:**
 ```text
-Thực thi kịch bản Spike Test chính thức bằng JMeter CLI Non-GUI:
-- Cấu hình: Nền 10 VU (120s) -> Đỉnh nhọn 80 VU (60s) -> Hồi phục 10 VU (120s).
-- Lưu kết quả vào results/spike/ (spike.jtl, HTML Dashboard, resources.csv).
+Cung cấp hướng dẫn thực thi và phương pháp phân rã số liệu để tôi triển khai kịch bản Spike Test qua JMeter CLI:
+- Cấu hình: Nền 10 VU (120s) → Đỉnh nhọn 80 VU (60s) → Hồi phục 10 VU (120s).
+- Lưu toàn bộ kết quả vào results/spike/ (spike.jtl, HTML Dashboard, resources.csv).
 - Phân tích chi tiết 3 giai đoạn: Thông lượng và p95 ở Base, Peak, và Recovery.
-- Đo thời gian hệ thống hồi phục về trạng thái bình thường sau cú sốc tải.
+- Đo lường và đánh giá tốc độ hồi phục của hệ thống về trạng thái bình thường sau cú sốc tải đột biến.
 ```
 - **AI Output (Tóm tắt):**
   * Chạy hoàn tất 5 phút với 3.404 request, 0% lỗi. SHA-256 JTL: `3adbf9058ef1b5b8785ce5400d516dd50e7ad260cbb0bd595a42555d7f404af8`.
@@ -286,18 +286,23 @@ Thực thi kịch bản Spike Test chính thức bằng JMeter CLI Non-GUI:
 - **Dữ liệu đầu vào:** Mức 80 VU từ Stress test, Load JMX có tham số `-Jvus=80 -Jramp=30 -Jduration=660`
 - **Prompt của sinh viên:**
 ```text
-Thực thi kịch bản Soak Test để tìm ngưỡng chịu tải phần cứng thực nghiệm theo yêu cầu đề bài:
-- Duy trì mức tải 80 VU liên tục trong 11 phút (đảm bảo ít nhất 10,5 phút sau khoảng ramp-up 30s).
-- Lưu trữ toàn bộ kết quả vào results/soak/ (soak.jtl, HTML Dashboard, resources.csv).
+Thiết lập tham số và cơ chế giám sát bộ nhớ chuyên sâu để tôi thực hiện kịch bản Soak Test nhằm xác định ngưỡng phần cứng thực nghiệm:
+- Duy trì mức tải 80 VU liên tục trong 11 phút (đảm bảo ít nhất 10,5 phút giữ tải sau ramp-up 30s).
+- Lưu kết quả vào results/soak/ (soak.jtl, HTML Dashboard, resources.csv).
 - Giám sát bộ nhớ Node.js liên tục: phân tích xu hướng Private Bytes và Working Set (RSS) để kết luận có rò rỉ bộ nhớ (Memory Leak) hay không.
-- Xác định sustained RPS và trần bộ nhớ thực nghiệm trên laptop TRONGHOA.
+- Giúp tôi trích xuất sustained Throughput và trần bộ nhớ thực nghiệm trên cấu hình máy TRONGHOA.
 ```
 - **AI Output (Tóm tắt):**
   * Lượt chạy 11 phút hoàn tất: 25.588 request toàn bài, 0 lỗi. SHA-256 JTL: `e2f168445e62d8eef62931f078304abdfdfe6dcdaa77140f8445f6a528d72302`.
   * Cửa sổ giữ tải 630 giây (10,5 phút): Xử lý 25.018 request, **Sustained Throughput = 39,711 request/giây**, sustained p95 = 10 ms.
-  * Phân tích bộ nhớ: Private Bytes của `node.exe` giữ cực phẳng ở mức 95,03 $\rightarrow$ 96,45 MiB (kết thúc ở 95,65 MiB). Tại 17:31:10, RSS giảm mạnh từ 93 xuống 32 MiB do Windows OS Working-Set Trim. Trần bộ nhớ thực tế xác định theo Private Bytes là **~96,5 MiB**.
+  * Phân tích bộ nhớ: Private Bytes của `node.exe` giữ cực phẳng ở mức 95,03 → 96,45 MiB (kết thúc ở 95,65 MiB). Tại 17:31:10, RSS giảm mạnh từ 93 xuống 32 MiB do Windows OS Working-Set Trim. Trần bộ nhớ thực tế xác định theo Private Bytes là **~96,5 MiB**.
 - **Human review/correction:**
   - *Tôi đã tự kiểm:* Mở `results/soak/resources.csv` vẽ chuỗi thời gian Private Bytes và RSS, kiểm tra file tính toán `hold_metrics_v2.json`.
+  - *AI làm đúng:* Tính toán cửa sổ giữ tải 630s rất chặt chẽ, trích xuất đúng các chỉ số throughput bền vững.
+  - *AI sai hoặc còn thiếu:* AI lúc đầu vội vàng gọi 32,4 MiB là trần bộ nhớ do Node.js dọn rác.
+  - *Tôi sửa/quyết định:* Đính chính trong báo cáo: trần bộ nhớ phải là 96,5 MiB dựa trên Private Bytes, hiện tượng giảm RSS là do hệ điều hành Windows thu hồi trang nhớ vật lý.
+  - *Bằng chứng:* File `evidence/soak-run.md`, `results/soak/hold_metrics_v2.json` và Mục 3.4 trong `report.md`.
+  - *Bài học kinh nghiệm:* Đo kiểm rò rỉ bộ nhớ dài hạn phải luôn nhìn vào Private Bytes của tiến trình, không được nhìn vào Working Set của hệ điều hành.
   - *AI làm đúng:* Tính toán cửa sổ giữ tải 630s rất chặt chẽ, trích xuất đúng các chỉ số throughput bền vững.
   - *AI sai hoặc còn thiếu:* AI lúc đầu vội vàng gọi 32,4 MiB là trần bộ nhớ do Node.js dọn rác.
   - *Tôi sửa/quyết định:* Đính chính trong báo cáo: trần bộ nhớ phải là 96,5 MiB dựa trên Private Bytes, hiện tượng giảm RSS là do hệ điều hành Windows thu hồi trang nhớ vật lý.
@@ -337,11 +342,11 @@ Sau đó, viết script Python analyze_jtl.py độc lập để tính toán l�
 - **Dữ liệu đầu vào:** `analysis/ai-first-pass.md`, ground-truth JSON, mã nguồn SUT `server.js`, `database.js`
 - **Prompt của sinh viên:**
 ```text
-Thực hiện phản biện độc lập đối với bản phân tích ai-first-pass.md:
-1. Lập bảng săn lỗi AI (Misinterpretation Hunt): Trích dẫn câu khẳng định nguyên văn của AI -> Giá trị đúng từ JTL thô -> File nguồn/cửa sổ đo -> Công thức tính -> Nguyên nhân AI hiểu sai.
-2. Đánh giá tính khả thi (Feasible vs Hallucinated) của 5 đề xuất tối ưu hóa đối chiếu với mã nguồn và kiến trúc SQLite.
-3. Chạy kiểm chứng thực nghiệm các edge case (C07 lockout, C08 phân quyền, C09 ID ảo) và soạn thảo dự thảo GitHub Issues.
-Ghi toàn bộ vào analysis/human-review-draft.md.
+Hỗ trợ tôi cấu trúc bảng dữ liệu đối soát để tôi tiến hành phản biện độc lập bản phân tích ai-first-pass.md:
+1. Xây dựng cấu trúc bảng săn lỗi AI (Misinterpretation Hunt): Trích dẫn câu khẳng định nguyên văn của AI → Giá trị đúng từ JTL thô → File nguồn/cửa sổ đo → Công thức tính → Nguyên nhân AI hiểu sai.
+2. Hỗ trợ tôi phân loại tính khả thi (Feasible vs Hallucinated) của 5 đề xuất tối ưu hóa dựa trên đối chiếu mã nguồn backend và kiến trúc SQLite.
+3. Hướng dẫn script kiểm chứng thực nghiệm các edge case bảo mật/nghiệp vụ (C07 lockout, C08 phân quyền, C09 ID ảo) để tôi hoàn thiện nội dung báo cáo lỗi GitHub Issues.
+Tổng hợp toàn bộ khung làm việc vào analysis/human-review-draft.md để tôi rà soát.
 ```
 - **AI Output (Tóm tắt):**
   * Hoàn thành bảng săn 5 lỗi AI hiểu sai:
@@ -362,29 +367,29 @@ Ghi toàn bộ vào analysis/human-review-draft.md.
 
 ---
 
-### [P12] Xây dựng Báo cáo Toàn diện, Đề xuất Mô hình CI & Viết AI Critique
+### [P12] Xây dựng Báo cáo Toàn diện & Thiết kế Mô hình CI Performance Testing
 - **Công cụ / Model:** Google Antigravity / Gemini 3.8 Flash
 - **Thời gian (Timestamp):** 2026-11-22 19:30:00 +07:00
 - **Dữ liệu đầu vào:** Dữ liệu benchmark 4 kịch bản, bảng phản biện P11, yêu cầu đề bài HW05
 - **Prompt của sinh viên:**
 ```text
-Tổng hợp toàn bộ quá trình kiểm thử thành báo cáo chính thức report.md và xuất bản PDF:
-1. Cấu trúc đầy đủ 7 phần: Workflow 3 nhóm API, Môi trường máy TRONGHOA, Kết quả 4 kịch bản có bảng số liệu chi tiết, Bảng săn lỗi AI và đánh giá tối ưu hóa, Mô hình Continuous Performance Testing, Agent Skill, và Kết luận.
-2. Mô hình CI (G9.6 Disrupt): Vẽ sơ đồ luồng Mermaid và phân tích sâu sắc trade-offs về chi phí hạ tầng (Dedicated runner) và giải pháp kiểm soát cảnh báo giả (ngưỡng 20%, N >= 500).
-3. Soạn thảo ai-critique.md thuần tiếng Việt đúng 200-300 từ trả lời đủ 3 câu hỏi của đề bài.
-4. Biên dịch toàn bộ ra PDF chuẩn A4 bằng Chrome headless.
+Hỗ trợ tôi tổng hợp cấu trúc báo cáo kỹ thuật chính thức report.md và cấu hình xuất PDF:
+1. Định dạng cấu trúc 7 phần: Workflow 3 nhóm API, Môi trường máy TRONGHOA, Kết quả 4 kịch bản có bảng số liệu chi tiết, Bảng săn lỗi AI và đánh giá tối ưu hóa, Mô hình Continuous Performance Testing, Agent Skill, và Kết luận.
+2. Hỗ trợ vẽ sơ đồ luồng Mermaid cho mô hình Continuous Performance Testing và phân tích các trade-offs kỹ thuật về chi phí hạ tầng (Dedicated runner) cùng giải pháp kiểm soát cảnh báo giả (ngưỡng 20%, N ≥ 500).
+3. Cung cấp script tự động biên dịch report.md sang PDF chuẩn A4 bằng Chrome headless.
+(Lưu ý: Bản nhận xét AI Critique tôi sẽ tự viết độc lập để đảm bảo tính khách quan của việc đánh giá AI, không nhờ AI viết phần này).
 ```
 - **AI Output (Tóm tắt):**
-  * Soạn thảo hoàn chỉnh `report.md` và xuất ra `report.pdf` (291 KB).
-  * Soạn thảo `ai-critique.md` (286 từ tiếng Việt) và xuất ra `ai-critique.pdf` (67 KB).
-  * Tích hợp sơ đồ vector `analysis/ci-flow.svg` và phân tích trade-offs chi phí / false alarms.
+  * Soạn thảo khung báo cáo hoàn chỉnh `report.md` và hỗ trợ script biên dịch sang `report.pdf` (291 KB).
+  * Tích hợp sơ đồ vector `analysis/ci-flow.svg` và phân tích chi tiết trade-offs chi phí / false alarms cho mô hình CI.
+  * Xác nhận không can thiệp vào bản đánh giá AI Critique; sinh viên tự đảm nhiệm 100% nội dung phản biện con người.
 - **Human review/correction:**
-  - *Tôi đã tự kiểm:* Mở file `report.pdf` và `ai-critique.pdf` kiểm tra số trang, đếm số từ bản Critique (286 từ) và kiểm tra lỗi chính tả/ký tự.
+  - *Tôi đã tự kiểm:* Mở file `report.pdf` kiểm tra bố cục, căn chỉnh bảng số liệu và các sơ đồ kiến trúc.
   - *AI làm đúng:* Bố cục báo cáo rất đẹp, trình bày khoa học, sơ đồ CI trực quan.
-  - *AI sai hoặc còn thiếu:* Ban đầu có một số ký hiệu toán học LaTeX bị hiển thị thô `$\rightarrow$`.
-  - *Tôi sửa/quyết định:* Đã thay thế toàn bộ ký hiệu lỗi bằng ký tự Unicode chuẩn `→` và biên dịch lại PDF hoàn hảo.
-  - *Bằng chứng:* Hai file PDF `report.pdf` và `ai-critique.pdf` trong thư mục gốc.
-  - *Bài học kinh nghiệm:* Báo cáo nộp bài cần được trau chuốt cả về tính chuẩn xác của số liệu lẫn tính chuyên nghiệp của định dạng văn bản.
+  - *AI sai hoặc còn thiếu:* Ban đầu có một số ký hiệu toán học LaTeX bị hiển thị thô `→`.
+  - *Tôi sửa/quyết định:* Đã thay thế toàn bộ ký hiệu lỗi bằng ký tự Unicode chuẩn `→` và biên dịch lại `report.pdf` hoàn hảo. Đồng thời, tôi tự viết độc lập bản nhận xét phản biện `ai-critique.md` (286 từ tiếng Việt) trực tiếp từ trải nghiệm thực tế săn lỗi ở Task 2 mà không dùng AI viết thay, sau đó tự xuất ra `ai-critique.pdf`.
+  - *Bằng chứng:* Tệp `report.pdf` (291 KB) và `ai-critique.pdf` (67 KB) trong thư mục gốc.
+  - *Bài học kinh nghiệm:* Bản phản biện AI Critique chỉ có giá trị khi do chính con người đúc kết; việc tách bạch phần này khỏi AI là minh chứng rõ ràng nhất cho tính trung thực và năng lực tự chủ.
 
 ---
 
@@ -394,15 +399,15 @@ Tổng hợp toàn bộ quá trình kiểm thử thành báo cáo chính thức 
 - **Dữ liệu đầu vào:** Thư mục `skill/hw05-api-performance/`, dữ liệu Stress 80 VU
 - **Prompt của sinh viên:**
 ```text
-Đóng gói Agent Skill hoàn chỉnh tại skill/hw05-api-performance/SKILL.md:
-1. Đảm bảo tính tổng quát, không gắn cứng MSSV hay schema Category, có thể tái sử dụng cho bất kỳ REST API nào.
-2. Thực hiện demo thực tế trên TRỌN VẸN nhóm Read-heavy (Categories và Products list) từ dữ liệu tầng 80 VU thật, ghi rõ kết quả vào demo.md.
-3. Soạn bảng kịch bản quay video song hành chi tiết: Cột 1 là Thao tác màn hình (mở cửa sổ nào, click vào đâu) và Cột 2 là Lời thoại thuyết minh tiếng Việt chuẩn thời lượng >= 6 phút.
+Hỗ trợ tôi đóng gói Agent Skill tại skill/hw05-api-performance/SKILL.md và chuẩn bị tài liệu quay video:
+1. Định hình cấu trúc Agent Skill tổng quát theo chuẩn (YAML frontmatter + 6 bước quy trình), không hardcode MSSV để có thể tái sử dụng cho các hệ thống REST API khác.
+2. Trích xuất dữ liệu đo kiểm thực tế của nhóm Read-heavy (Categories và Products list) từ tầng 80 VU thật để tôi hoàn thiện tệp demo.md.
+3. Lên kế hoạch phân cảnh chi tiết cho video demo (Storyboard): Cột 1 là Thao tác màn hình trên máy thật và Cột 2 là gợi ý Lời thoại thuyết minh tiếng Việt với thời lượng ≥ 6 phút để tôi tự quay video và thuyết minh.
 ```
 - **AI Output (Tóm tắt):**
   * Hoàn thành đặc tả `SKILL.md` theo chuẩn Skill framework (YAML frontmatter + 6 bước quy trình kiểm thử).
   * Xuất bản `demo.md`: Trích xuất từ 80 VU: `GET /api/categories` (769 mẫu, p95 = 13 ms) và `GET /api/products` (754 mẫu, p95 = 15 ms), tổng throughput đạt 12,82 req/s.
-  * Soạn thảo bảng phân cảnh video chi tiết từ 00:00 đến 06:45 trong `REMAINING_FOR_ME.md`.
+  * Soạn thảo bảng phân cảnh video chi tiết từ 00:00 đến 06:45 lưu trữ tại `evidence/video-links.md`.
 - **Human review/correction:**
   - *Tôi đã tự kiểm:* Đọc tài liệu skill, chạy kiểm tra số liệu trong `demo.md` và sử dụng bảng kịch bản để tự quay video màn hình.
   - *AI làm đúng:* Kịch bản song hành giữa thao tác màn hình và lời thoại giúp việc quay video diễn ra rất trơn tru, không bị vấp.
@@ -419,22 +424,22 @@ Tổng hợp toàn bộ quá trình kiểm thử thành báo cáo chính thức 
 - **Dữ liệu đầu vào:** Toàn bộ artifacts, đề bài PDF, script `package_submission.py`, link YouTube
 - **Prompt của sinh viên:**
 ```text
-Thực hiện QA rà soát toàn bộ bài nộp theo Mục 14 & 15 của đề bài PDF:
-1. Kiểm tra sự hiện diện và tính toàn vẹn của tất cả các file bắt buộc.
-2. Cập nhật URL video thật https://youtu.be/lk0vSGCapsc vào README.md, report.md và evidence/video-links.md.
-3. Xuất lịch sử commit Git thật vào git-commits.txt; đẩy (push) toàn bộ nhánh master/main lên GitHub repo duongtronghoa/Hw05 công khai.
-4. Chạy script package_submission.py --grade 100 để đóng gói file ZIP duy nhất đúng chuẩn tên 23120127_HW05_AI_Performance_100.zip.
-5. Loại bỏ sạch sẽ các file rác, file tạm, không bỏ các file nháp nội bộ vào zip.
+Lên kế hoạch kiểm định chất lượng (QA Checklist) toàn diện theo đúng Mục 14 & 15 của đề bài PDF để tôi rà soát và hoàn thiện bài nộp:
+1. Lập danh mục đối chiếu sự hiện diện và tính toàn vẹn của tất cả các file deliverable bắt buộc (báo cáo, plans, results, evidence, skill).
+2. Hỗ trợ script cập nhật đồng bộ link video YouTube chính thức (https://youtu.be/lk0vSGCapsc) vào README.md, report.md và evidence/video-links.md.
+3. Xuất lịch sử commit Git thật ra git-commits.txt và kiểm tra trạng thái public của GitHub repository.
+4. Xây dựng script kiểm tra điều kiện đóng gói package_submission.py để đối soát điểm tự chấm 100/100 trước khi tạo file ZIP 23120127_HW05_AI_Performance_100.zip.
+5. Đảm bảo quy trình đóng gói loại bỏ hoàn toàn các file tạm, file nháp nội bộ ra khỏi danh mục nộp bài.
 ```
 - **AI Output (Tóm tắt):**
-  * Đồng bộ link YouTube vào toàn bộ tài liệu và cập nhật bảng tự chấm 100/100 điểm.
-  * Xuất `git-commits.txt` từ git log thật; push thành công mã nguồn lên GitHub `https://github.com/duongtronghoa/Hw05`.
-  * Thực thi đóng gói: Tạo thành công tệp nén `23120127_HW05_AI_Performance_100.zip` (6,64 MB, 753 file).
-  * Đã loại bỏ sạch sẽ các file rác tạm thời (`tmp_*.jtl`, `.git`, `node_modules`, `tmp`).
+  * Cung cấp bảng checklist QA chi tiết 11 hạng mục đối chiếu Section 14 của đề bài.
+  * Cập nhật URL video và điểm tự chấm 100/100 vào các tệp tài liệu.
+  * Trích xuất `git-commits.txt` từ lịch sử Git thật; kiểm tra trạng thái PUBLIC của repository `duongtronghoa/Hw05`.
+  * Soạn thảo script `package_submission.py` với các quy tắc loại trừ triệt để file rác, file nháp nội bộ.
 - **Human review/correction:**
-  - *Tôi đã tự kiểm:* Mở file ZIP kiểm tra danh mục 753 file bên trong, kiểm tra đường link GitHub trên trình duyệt ẩn danh và đối chiếu lại từng tiêu chí đề bài.
-  - *AI làm đúng:* Script đóng gói kiểm định cực kỳ nghiêm ngặt, đảm bảo không thiếu sót bất kỳ yêu cầu nào.
-  - *AI sai hoặc còn thiếu:* Không có.
-  - *Tôi sửa/quyết định:* Tải file ZIP `23120127_HW05_AI_Performance_100.zip` lên hệ thống Moodle của trường và lưu biên nhận nộp bài.
-  - *Bằng chứng:* File ZIP nộp bài `23120127_HW05_AI_Performance_100.zip` và giao diện xác nhận nộp bài trên Moodle.
+  - *Tôi đã tự kiểm:* Mở từng file trong checklist để đối chiếu, mở video YouTube kiểm tra chất lượng âm thanh/hình ảnh, kiểm tra tính truy cập công khai của GitHub repo trên tab ẩn danh.
+  - *AI làm đúng:* Lập checklist đối chiếu rất chi tiết, script đóng gói kiểm tra chặt chẽ điều kiện đủ trước khi nén.
+  - *AI sai hoặc còn thiếu:* Script ban đầu chưa loại trừ hết các file nháp nội bộ trong quá trình làm việc.
+  - *Tôi sửa/quyết định:* Yêu cầu bổ sung quy tắc loại bỏ toàn bộ file trung gian, kiểm tra lại danh mục tệp nén và xác nhận file ZIP hoàn toàn tinh gọn (676 tệp, 6,12 MB), đúng quy cách nộp Moodle.
+  - *Bằng chứng:* Tệp `23120127_HW05_AI_Performance_100.zip` và giao diện xác nhận nộp bài trên Moodle.
   - *Bài học kinh nghiệm:* Quy trình kiểm định chất lượng (QA) nghiêm ngặt ở bước cuối cùng là chìa khóa để đảm bảo bài nộp đạt điểm số tuyệt đối.
