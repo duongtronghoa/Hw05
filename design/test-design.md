@@ -86,3 +86,11 @@ Hệ thống được coi là đạt tiêu chuẩn chấp nhận ban đầu nế
 1. **Rủi ro phân loại "Transactional":** Đề bài minh họa transactional qua giỏ hàng/thanh toán. Nhóm endpoint `POST/PUT/DELETE /api/categories` thực chất là thao tác ghi dữ liệu quản trị (Write/CRUD), cần xác nhận lại nếu giảng viên yêu cầu bắt buộc phải là luồng checkout.
 2. **Khóa ghi SQLite:** SQLite khóa toàn bộ file cơ sở dữ liệu khi có giao dịch ghi. Dưới tải 40–80 VU đồng thời, có thể xuất hiện lỗi `SQLITE_BUSY` ở bước 4.
 3. **Trùng lặp workflow trong nhóm:** Cần sự xác nhận độc lập từ các thành viên khác trong nhóm để đảm bảo không bị trùng lặp workflow kiểm thử.
+
+## 5. Xác nhận và điều chỉnh sau thiết kế ban đầu
+
+- Người học xác nhận nhóm đã đồng ý workflow Category CRUD này không trùng. API category vẫn là thao tác ghi quản trị; cách phân loại nhóm transactional cần được giải thích rõ trong báo cáo vì đề nêu checkout như ví dụ.
+- Bản JMX cuối tạo `categoryName` trước POST bằng User Parameters và `__UUID()`, dùng lại cùng giá trị với hậu tố `_updated` ở PUT. Bản P03 ban đầu chưa làm đúng điểm này; xem `plan-review.md` và smoke thực tế.
+- Timer cấp Thread Group áp dụng cả trước login, nên 1–3 giây là khoảng chờ trước **mọi** request. Điều này làm tải phát ra thấp hơn VU/giây và cần ghi vào diễn giải RPS.
+- `-Jduration=900` gồm ramp 60 giây và khoảng 14 phút ở đủ VU, đáp ứng yêu cầu giữ tải khoảng 10–15 phút. Giá trị cuối phải đọc từ JTL/monitor, không suy ra chỉ từ tham số.
+- Scheduler có thể dừng một iteration giữa POST và DELETE. Kiểm tra category tồn dư sau từng run và lưu snapshot ID/tên trước khi dọn; không gọi số request 0 lỗi là workflow 0 lỗi.
