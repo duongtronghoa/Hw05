@@ -4,6 +4,7 @@ import csv
 import hashlib
 import io
 import json
+import math
 import re
 import subprocess
 import sys
@@ -78,7 +79,7 @@ def main() -> None:
             listeners = [node.attrib.get("testname", "") for node in root.iter("ResultCollector")]
             csv_ref = any("admin${__threadNum}.csv" in (node.text or "") for node in root.iter("stringProp"))
             labels = {node.attrib.get("testname", "") for node in root.iter("HTTPSamplerProxy")}
-            check(f"JMX {scenario}: listener/CSV/6 bước", expected_listener in listeners and csv_ref and len(labels) >= 6, f"listeners={listeners}, CSV={csv_ref}, HTTP labels={len(labels)}")
+            check(f"JMX {scenario}: listener/CSV/6 bước", any(name.startswith(expected_listener) for name in listeners) and csv_ref and len(labels) >= 6, f"listeners={listeners}, CSV={csv_ref}, HTTP labels={len(labels)}")
 
         csv_names = {n for n in names if re.fullmatch(r"data/admin\d+\.csv", n)}
         expected_csv = {f"data/admin{i}.csv" for i in range(1, 101)}
@@ -92,6 +93,7 @@ def main() -> None:
         check("CSV có cấu trúc/dữ liệu", valid_csv, "Một tài khoản tổng hợp mỗi file")
 
         sample_summary = []
+        ground_truth = json.loads(archive.read("analysis/jtl-metrics-ground-truth.json"))
         for scenario in (*SCENARIOS, "soak"):
             raw = archive.read(f"results/{scenario}/{scenario}.jtl").decode("utf-8-sig")
             data = list(csv.DictReader(io.StringIO(raw)))
@@ -99,6 +101,20 @@ def main() -> None:
             labels = Counter(row["label"] for row in data)
             required = [f"results/{scenario}/jmeter.log", f"results/{scenario}/resources.csv", f"results/{scenario}/html/index.html"]
             check(f"{scenario}: raw/HTML/monitor", bool(data) and all(n in names for n in required), f"samples={len(data)}, errors={errors}, labels={len(labels)}")
+            phases: dict[str, list[dict[str, str]]] = {}
+            for row in data:
+                key = row["threadName"].rsplit(" ", 1)[0]
+                phases.setdefault(key, []).append(row)
+            expected = ground_truth[scenario]
+            metric_ok = len(data) == expected["total"]["samples"] and errors == expected["total"]["errors"] and set(phases) == set(expected["phases"])
+            for phase, group in phases.items():
+                elapsed = sorted(int(row["elapsed"]) for row in group)
+                target = expected["phases"][phase]
+                metric_ok &= len(group) == target["samples"]
+                metric_ok &= sum(row["success"].lower() != "true" for row in group) == target["errors"]
+                for pct in (50, 90, 95, 99):
+                    metric_ok &= elapsed[math.ceil(pct / 100 * len(elapsed)) - 1] == target[f"p{pct}_ms"]
+            check(f"{scenario}: metric raw khớp ground truth", bool(metric_ok), f"{len(phases)} pha, kiểm n/error/p50/p90/p95/p99")
             sample_summary.append(f"- {scenario}: {len(data)} samples, {errors} JMeter errors, {len(labels)} labels.")
         check("Số mẫu khớp report", [sum(1 for _ in csv.DictReader(io.StringIO(archive.read(f"results/{s}/{s}.jtl").decode("utf-8-sig")))) for s in SCENARIOS] == [4499, 8364, 3404], "load=4499, stress=8364, spike=3404")
 

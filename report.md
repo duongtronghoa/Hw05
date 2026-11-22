@@ -72,10 +72,10 @@ Toàn bộ các lượt chạy được thực hiện ở chế độ Non-GUI (C
 
 | Tầng tải (VU) | Số mẫu (n) | Lỗi | Throughput (req/s) | p50 (ms) | p90 (ms) | p95 (ms) | p99 (ms) | p95 Thao tác ghi cao nhất |
 |---|---:|---:|---:|---:|---:|---:|---:|---|
-| **10 VU** | 569 | 0 | 4,879 | 3 | 6 | **8** | 10 | 9 ms (`DELETE`) |
-| **20 VU** | 1.103 | 0 | 9,310 | 3 | 6 | **8** | 11 | 13 ms (`DELETE`) |
-| **40 VU** | 2.201 | 0 | 18,521 | 3 | 7 | **9** | 14 | 11 ms (`POST/PUT`) |
-| **80 VU** | 4.491 | 0 | 37,796 | 4 | 13 | **23** | 40 | **32 ms** (`DELETE`), p99 = 152 ms |
+| **10 VU** | 569 | 0 | 4,879 | 3 | 7 | **8** | 13 | 9 ms (`DELETE`) |
+| **20 VU** | 1.103 | 0 | 9,310 | 3 | 7 | **8** | 15 | 13 ms (`DELETE`) |
+| **40 VU** | 2.201 | 0 | 18,521 | 3 | 8 | **9** | 16 | 11 ms (`POST/PUT`) |
+| **80 VU** | 4.491 | 0 | 37,796 | 3 | 17 | **23** | 60 | **32 ms** (`DELETE`), p99 = 152 ms |
 
 * **Nhận định điểm suy giảm hiệu năng (Degradation Point):** Ở 10–40 VU, p95 là 8–9 ms. Khi tải tăng lên 80 VU, p95 toàn cục đạt 23 ms và p99 của DELETE đạt 152 ms. Tranh chấp ghi SQLite là một giả thuyết cần thử nghiệm riêng; JTL không chứng minh nguyên nhân. Không ghi nhận lỗi HTTP trong lượt chạy.
 * Tài nguyên: `node.exe` RSS tối đa 92,98 MiB; `java.exe` JMeter RSS tối đa 480,33 MiB.
@@ -87,9 +87,9 @@ Toàn bộ các lượt chạy được thực hiện ở chế độ Non-GUI (C
 
 | Giai đoạn | Số mẫu (n) | Thời lượng (s) | Throughput (req/s) | p50 (ms) | p95 (ms) | p99 (ms) | Trạng thái hồi phục |
 |---|---:|---:|---:|---:|---:|---:|---|
-| **Phase 1: Base (10 VU)** | 565 | 118,08 | 4,785 | 3 | **9** | 11 | Điểm chuẩn nền |
-| **Phase 2: Peak (80 VU)** | 2.262 | 58,14 | 38,907 | 4 | **10** | 18 | Tải tăng gấp 8 lần tức thì |
-| **Phase 3: Recovery (10 VU)** | 577 | 117,71 | 4,902 | 3 | **9** | 11 | p95 bằng mức nền |
+| **Phase 1: Base (10 VU)** | 565 | 118,08 | 4,785 | 4 | **9** | 25 | Điểm chuẩn nền |
+| **Phase 2: Peak (80 VU)** | 2.262 | 58,14 | 38,907 | 3 | **10** | 17 | Tải tăng gấp 8 lần tức thì |
+| **Phase 3: Recovery (10 VU)** | 577 | 117,71 | 4,902 | 3 | **9** | 15 | p95 bằng mức nền |
 
 * **Nhận xét khả năng hồi phục:** Pha sau đỉnh có p95 = 9 ms, bằng pha nền. Khoảng trống 2,155 giây giữa hai pha bao gồm chuyển Thread Group và think-time của JMeter; log không đủ để suy ra backend downtime hoặc thời gian hồi phục chính xác.
 * Bằng chứng: `results/spike/spike.jtl` (SHA-256: `3adbf9058ef1...`), `results/spike/html/index.html`.
@@ -99,7 +99,7 @@ Toàn bộ các lượt chạy được thực hiện ở chế độ Non-GUI (C
 * **Cửa sổ giữ tải ổn định sau ramp (Hold Window):** Kéo dài chính xác 630 giây (10,5 phút) từ `17:21:33` đến `17:32:03`.
 * **Thông số định lượng thực nghiệm:**
   * **Sustained Throughput:** **39,711 request/giây** (Tổng 25.018 request trong cửa sổ giữ tải, 0 lỗi).
-  * **Độ trễ duy trì (Sustained p95):** Toàn cục đạt **10 ms** (Login: 8 ms, Categories: 7 ms, Products: 7 ms, Create: 13 ms, Update: 12 ms, Delete: 13 ms).
+  * **Độ trễ duy trì (Sustained p95):** Toàn cục đạt **10 ms** (Login: 8 ms, Categories: 8 ms, Products: 7 ms, Create: 13 ms, Update: 12 ms, Delete: 13 ms).
   * **Hành vi bộ nhớ:**
     * Private Bytes của `node.exe` trong cửa sổ giữ tải đạt tối đa **96,45 MiB** và kết thúc ở **95,65 MiB**; không thấy xu hướng tăng đều trong 10,5 phút, nhưng thử nghiệm ngắn này chưa loại trừ rò rỉ dài hạn.
     * Working Set (RSS) giảm từ khoảng 93 MiB xuống 32,38 MiB lúc 17:31:10, trong khi Private Bytes gần như giữ nguyên. Diễn biến này phù hợp với việc Windows thu hồi working set; log không chứng minh nguyên nhân tuyệt đối. **96,45 MiB là giá trị cao nhất quan sát, chưa phải trần bộ nhớ**.
