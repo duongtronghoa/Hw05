@@ -63,8 +63,7 @@ def main() -> None:
         if any(part in ignored_dirs for part in rel.parts):
             continue
         if x.name in ignored_files or x.name.startswith("."):
-            if x.name != ".gitignore":
-                continue
+            continue
         if x.suffix in {".pyc", ".sqlite"}:
             continue
         if rel.parts[:3] == ("results", "smoke", "plans"):
