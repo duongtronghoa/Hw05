@@ -1,0 +1,71 @@
+{
+  "time_local": "2026-11-22T17:35:26+07:00",
+  "sut_commit": "85af3ba875c88283615e22cb108f13e2fccaf0e9",
+  "C07_lockout": {
+    "email": "hw05_edge_a8dfeb6279f8@example.test",
+    "wrong_attempts": [
+      {
+        "status": 401,
+        "response": {
+          "error": "Invalid email or password"
+        }
+      },
+      {
+        "status": 401,
+        "response": {
+          "error": "Invalid email or password"
+        }
+      }
+    ],
+    "correct_after_two_wrong": {
+      "status": 403,
+      "response": {
+        "error": "Tài khoản đã bị khóa. Vui lòng thử lại sau."
+      }
+    },
+    "db_login_attempts": 4,
+    "db_locked_until": "2026-11-22T10:38:26.488Z",
+    "expected_from_README": "lock after 3 consecutive wrong attempts for 30 seconds"
+  },
+  "C08_nonadmin_write": {
+    "role": "user",
+    "create": {
+      "status": 200,
+      "response": {
+        "message": "Category created",
+        "id": 7345
+      }
+    },
+    "update": {
+      "status": 200,
+      "response": {
+        "message": "Category updated"
+      }
+    },
+    "delete": {
+      "status": 200,
+      "response": {
+        "message": "Category deleted"
+      }
+    },
+    "expected_from_README": "403 or equivalent refusal for non-admin token on category writes"
+  },
+  "C09_absent_id": {
+    "id": 2147483647,
+    "put": {
+      "status": 200,
+      "response": {
+        "message": "Category updated"
+      }
+    },
+    "delete": {
+      "status": 200,
+      "response": {
+        "message": "Category deleted"
+      }
+    },
+    "category_count_before": 3,
+    "category_count_after": 3,
+    "note": "Actual no-op 200; API spec does not explicitly require 404, so classify separately from confirmed bugs."
+  }
+}
