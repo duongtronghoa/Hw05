@@ -1,0 +1,6 @@
+# Generated benchmark logs can be large and may contain response data.
+results/
+
+# Keep the upstream SUT outside this repository.
+*.sqlite
+__pycache__/
