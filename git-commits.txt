@@ -1,4 +1,7 @@
-﻿* bcde2f9 HW05: exclude hidden files in packaging script
+﻿* e6b1df4 HW05: refine AI audit prompts, remove AI critique delegation, ensure professional student-led prompts
+* a226029 HW05: ensure git-commits.txt is clean UTF-8
+* c6b3dfa HW05: final git commits log
+* bcde2f9 HW05: exclude hidden files in packaging script
 * 3fefbba HW05: update git-commits.txt with cleaned tree
 * 88e08d3 HW05: clean up temporary scaffolding and finalize professional submission files
 * d20a827 HW05: update git-commits.txt for Vietnamese critique
@@ -20,6 +23,3 @@
 * d7122e8 HW05: document measured hardware and missing screenshots
 * 26eee37 HW05: summarize Stress stages and prepare separate edge probes
 * 2510b97 HW05: prepare evidence capture and skill demo storyboard
-* 1f2275e HW05: add Markdown-to-PDF export for report artifacts
-* 65bd863 HW05: document Load execution and remaining visual evidence
-* 80369f2 HW05: record reproducible run provenance and evidence gaps
