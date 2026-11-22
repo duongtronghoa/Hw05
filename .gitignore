@@ -4,3 +4,4 @@ results/
 # Keep the upstream SUT outside this repository.
 *.sqlite
 __pycache__/
+tmp/
