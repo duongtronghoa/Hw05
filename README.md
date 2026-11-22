@@ -5,7 +5,7 @@
 **Hệ thống kiểm thử (SUT):** EShop Backend REST API (Node.js + Express + SQLite)  
 **Upstream Commit:** `85af3ba875c88283615e22cb108f13e2fccaf0e9`  
 **GitHub Repository (Public):** [https://github.com/duongtronghoa/Hw05](https://github.com/duongtronghoa/Hw05)  
-**Demo Video (YouTube Unlisted):** Xem trong [evidence/video-links.md](evidence/video-links.md)
+**Demo Video (YouTube Unlisted):** [https://youtu.be/lk0vSGCapsc](https://youtu.be/lk0vSGCapsc) (Chi tiết tại [evidence/video-links.md](evidence/video-links.md))
 
 ---
 
@@ -47,7 +47,7 @@
 ## 3. Cấu trúc Thư mục Nộp bài
 
 * `report.md` & `report.pdf`: Báo cáo chính toàn diện.
-* `ai-critique.md` & `ai-critique.pdf`: Bản nhận xét AI tiếng Anh (239 từ).
+* `ai-critique.md` & `ai-critique.pdf`: Bản nhận xét phản biện phân tích của AI (286 từ, tiếng Việt chuẩn xác theo đề).
 * `ai_audit.md` & `ai_audit.pdf`: Nhật ký AI Audit đầy đủ từ P00 đến P14.
 * `plans/`: 3 file kịch bản JMeter (.jmx) Load, Stress, Spike.
 * `results/`: 4 thư mục dữ liệu thô (load, stress, spike, soak) chứa `.jtl`, `jmeter.log`, HTML Dashboard và `resources.csv`.

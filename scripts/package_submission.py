@@ -48,13 +48,32 @@ def main() -> None:
         p.error("gh CLI unavailable; verify public GitHub repository manually first")
     target = ROOT / f"23120127_HW05_AI_Performance_{args.grade:03}.zip"
     if target.exists():
-        p.error(f"ZIP already exists: {target}")
-    paths = [x for x in WORK.rglob("*") if x.is_file() and not any(part in {".git", "tmp", "__pycache__", "node_modules"} for part in x.relative_to(WORK).parts) and x.name not in {"ai-audit.md"} and x.suffix not in {".pyc", ".sqlite"}]
-    paths = [x for x in paths if not (x.relative_to(WORK).parts[:3] == ("results", "smoke", "plans"))]
-    with zipfile.ZipFile(target, "x", compression=zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
-        archive.write(ROOT / "HW05_PLAN.md", "HW05_PLAN.md")
+        target.unlink()
+
+    ignored_dirs = {".git", "tmp", "__pycache__", "node_modules", "audit_inputs", "audit_outputs"}
+    ignored_files = {
+        "ai-audit.md", "HW05_PROMPTS.md", "REMAINING_FOR_ME.md", "workflow.md",
+        "append_ai_audit.py", "tmp_load.jtl", "tmp_stress.jtl", "tmp_spike.jtl",
+    }
+    paths = []
+    for x in WORK.rglob("*"):
+        if not x.is_file():
+            continue
+        rel = x.relative_to(WORK)
+        if any(part in ignored_dirs for part in rel.parts):
+            continue
+        if x.name in ignored_files or x.name.startswith("."):
+            if x.name != ".gitignore":
+                continue
+        if x.suffix in {".pyc", ".sqlite"}:
+            continue
+        if rel.parts[:3] == ("results", "smoke", "plans"):
+            continue
+        paths.append(x)
+
+    with zipfile.ZipFile(target, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
         for path in sorted(paths):
-            archive.write(path, "hw05-work/" + path.relative_to(WORK).as_posix())
+            archive.write(path, path.relative_to(WORK).as_posix())
     with zipfile.ZipFile(target) as archive:
         bad = archive.testzip()
         if bad:

@@ -6,6 +6,7 @@
 **SUT (Hệ thống kiểm thử):** EShop Backend REST API (Node.js + Express + SQLite)  
 **Upstream Commit:** `85af3ba875c88283615e22cb108f13e2fccaf0e9`  
 **Public GitHub Repo:** [https://github.com/duongtronghoa/Hw05](https://github.com/duongtronghoa/Hw05)  
+**Demo Video (YouTube Unlisted):** [https://youtu.be/lk0vSGCapsc](https://youtu.be/lk0vSGCapsc)  
 **Thời gian thực hiện:** Tháng 11/2026  
 
 ---

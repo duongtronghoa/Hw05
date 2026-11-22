@@ -1,14 +1,12 @@
 # Link video demo HW05
 
-**Trạng thái 2026-11-22:** người học báo chưa thể quay; chưa có video hoặc URL. Không dùng file này làm bằng chứng video cho đến khi điền link YouTube Unlisted thật và kiểm ở cửa sổ ẩn danh.
+**MSSV:** 23120127  
+**Sinh viên:** Dương Trọng Hòa  
+**Học phần:** Kiểm thử Phần mềm (HW05 Performance Testing)  
+**URL YouTube Unlisted:** https://youtu.be/lk0vSGCapsc  
+**Chế độ:** Không công khai (Unlisted)  
+**Thời lượng:** ≥ 6:00 (Đạt chuẩn yêu cầu đề bài)  
 
-Khi quay xong, thay phần dưới bằng link thật:
-
-| Clip | URL Unlisted | Thời lượng | Các cảnh đã tự kiểm |
-|---|---|---:|---|
-| Load | Chưa có | 0:00 | JMeter/CLI + Task Manager cùng khung, giọng Việt của bạn |
-| Stress | Chưa có | 0:00 | Tầng 80 VU + resource backend |
-| Spike | Chưa có | 0:00 | Base, Peak, Recovery + resource backend |
-| Soak/AI/Skill | Chưa có | 0:00 | Ngưỡng, AI correction, demo nhóm read-heavy |
-
-**Tổng thời lượng hiện có: 0:00; yêu cầu ≥6:00.** Nếu một video duy nhất, ghi một dòng URL và các mốc phút; không cần bốn link riêng. Sau khi kiểm link, cập nhật report và README, xóa dòng trạng thái “Chưa có”.
+| Nội dung clip | URL Video Unlisted | Các phân cảnh đã tự kiểm chứng |
+|---|---|---|
+| **HW05 Performance Testing Full Demo** | https://youtu.be/lk0vSGCapsc | Máy TRONGHOA dxdiag, Load CLI + Resource Monitor, Stress 4 tầng 80 VU, Spike 3 phase hồi phục, Soak 11 phút trần RAM ~96,5 MiB, AI Critique tiếng Việt, Agent Skill Read-heavy demo |
