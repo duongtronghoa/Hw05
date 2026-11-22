@@ -3,7 +3,8 @@
 ## Trạng thái
 
 - Đã chuẩn bị repo bài làm cục bộ và chọn workflow Admin.
-- Đã xác nhận backend EShop chạy ở `http://localhost:3000`.
+- Đã xác nhận backend EShop chạy ở `http://localhost:3000` và smoke test đủ 6 endpoint trong workflow.
+- Đã tạo 100 admin account tổng hợp và 100 CSV riêng cho virtual users; xem `evidence/data-preparation.md`.
 - Các test plan Load/Stress/Spike và kết quả đo chưa được tạo; đó là phần sau mục 1–3 của kế hoạch.
 - Chưa tạo GitHub repository công khai hoặc xác nhận workflow không trùng với thành viên khác.
 
