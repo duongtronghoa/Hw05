@@ -59,3 +59,13 @@
 - `23120127_Load_20261122.jmx`: **LOADED_OK** (Đã xác minh khởi chạy CLI với 0 VU thành công).
 - `23120127_Stress_20261122.jmx`: **LOADED_OK** (Cây phần tử gồm 4 Thread Group tuần tự 10/20/40/80 VU nạp thành công).
 - `23120127_Spike_20261122.jmx`: **LOADED_OK** (Cây phần tử gồm 3 Thread Group 10/80/10 VU nạp thành công).
+
+## 4. Bổ sung sau khi chạy smoke thực tế
+
+Phần 2 ở trên mô tả bản P03 ban đầu và đã **không còn đúng** ở các điểm `IfController`, `on_sample_error` và tên category. Không dùng phần đó để mô tả JMX cuối.
+
+- Review độc lập phát hiện `IfController.useExpression=true` với điều kiện so sánh thô; tất cả request sau login bị bỏ qua.
+- Sửa đầu tiên dùng `__groovy` và JSR223 Groovy để tạo tên. Lượt `results/smoke/load.jtl` chỉ có 3 mẫu; `load.log` báo `Unsupported class file major version 69` vì Groovy đóng gói với JMeter 5.6.3 không tương thích Java 25 hiện tại. Giữ nguyên file lỗi làm chứng cứ, không tính là benchmark.
+- Bản sửa thứ hai dùng JMeter core `__jexl3` cho hai điều kiện và `UserParameters` + `__UUID()` cho tên. POST dùng `${categoryName}` và PUT dùng `${categoryName}_updated`. `on_sample_error=continue` giảm nguy cơ bỏ qua DELETE khi PUT lỗi. Timer ở cấp Thread Group nên login cũng chờ 1–3 giây.
+- Tạo bản sao smoke bằng `scripts/make_smoke_plans.py`: chỉ bật Thread Group đầu, 1 VU/1 iteration, CSV trỏ tới dữ liệu thật. Kết quả `results/smoke/load_v2.jtl`, `stress.jtl`, `spike.jtl`: mỗi file đúng sáu nhãn 01–06, tất cả HTTP 200 và `success=true`. SQLite có 102 users, 3 categories, 5 products trước smoke; categories vẫn là 3 sau cả ba lượt. JTL/log trong `results/smoke` bị `.gitignore` loại khỏi Git, cần đóng gói riêng khi nộp.
+- PUT/DELETE của SUT trả 200 kể cả ID không tồn tại; smoke xác nhận chuỗi sáu bước và số category cuối, chưa chứng minh bản ghi cụ thể đã được cập nhật rồi xóa. Cần case chức năng riêng. Nếu một request ghi thất bại trong đợt sau, kiểm tra và dọn category có prefix bài làm sau khi lưu chứng cứ.

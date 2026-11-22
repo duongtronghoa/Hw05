@@ -65,7 +65,7 @@ def get_sampler_block():
           <hashTree/>
         </hashTree>
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Token Valid" enabled="true">
-          <stringProp name="IfController.condition">&quot;${token}&quot; != &quot;NOT_FOUND&quot; &amp;&amp; &quot;${token}&quot; != &quot;&quot;</stringProp>
+          <stringProp name="IfController.condition">${__jexl3(&quot;${token}&quot; != &quot;NOT_FOUND&quot; &amp;&amp; &quot;${token}&quot; != &quot;&quot;)}</stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
           <boolProp name="IfController.useExpression">true</boolProp>
         </IfController>
@@ -127,7 +127,7 @@ def get_sampler_block():
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&quot;name&quot;:&quot;${category_prefix}_${__time(yyyyMMddHHmmss,)}_${__UUID()}&quot;}</stringProp>
+                  <stringProp name="Argument.value">{&quot;name&quot;:&quot;${categoryName}&quot;}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
               </collectionProp>
@@ -139,6 +139,18 @@ def get_sampler_block():
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           </HTTPSamplerProxy>
           <hashTree>
+            <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="Generate Category Name" enabled="true">
+              <collectionProp name="UserParameters.names">
+                <stringProp name="0">categoryName</stringProp>
+              </collectionProp>
+              <collectionProp name="UserParameters.thread_values">
+                <collectionProp name="0">
+                  <stringProp name="0">${category_prefix}_${__UUID()}</stringProp>
+                </collectionProp>
+              </collectionProp>
+              <boolProp name="UserParameters.per_iteration">false</boolProp>
+            </UserParameters>
+            <hashTree/>
             <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Headers Create" enabled="true">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="" elementType="Header">
@@ -179,7 +191,7 @@ def get_sampler_block():
             <hashTree/>
           </hashTree>
           <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If CategoryId Valid" enabled="true">
-            <stringProp name="IfController.condition">&quot;${categoryId}&quot; != &quot;NOT_FOUND&quot; &amp;&amp; &quot;${categoryId}&quot; != &quot;&quot;</stringProp>
+            <stringProp name="IfController.condition">${__jexl3(&quot;${categoryId}&quot; != &quot;NOT_FOUND&quot; &amp;&amp; &quot;${categoryId}&quot; != &quot;&quot;)}</stringProp>
             <boolProp name="IfController.evaluateAll">false</boolProp>
             <boolProp name="IfController.useExpression">true</boolProp>
           </IfController>
@@ -190,7 +202,7 @@ def get_sampler_block():
                 <collectionProp name="Arguments.arguments">
                   <elementProp name="" elementType="HTTPArgument">
                     <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&quot;name&quot;:&quot;${category_prefix}_${__time(yyyyMMddHHmmss,)}_${__UUID()}_upd&quot;}</stringProp>
+                    <stringProp name="Argument.value">{&quot;name&quot;:&quot;${categoryName}_updated&quot;}</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
                   </elementProp>
                 </collectionProp>
@@ -296,7 +308,7 @@ def generate_load_plan():
       </CSVDataSet>
       <hashTree/>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TG_Load_Workload" enabled="true">
-        <stringProp name="ThreadGroup.on_sample_error">startnextloop</stringProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
@@ -366,7 +378,7 @@ def generate_stress_plan():
     for name, vus, ramp, duration in levels:
         tgs += f"""
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="{name}" enabled="true">
-        <stringProp name="ThreadGroup.on_sample_error">startnextloop</stringProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
@@ -471,7 +483,7 @@ def generate_spike_plan():
     for name, vus, ramp, duration in phases:
         tgs += f"""
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="{name}" enabled="true">
-        <stringProp name="ThreadGroup.on_sample_error">startnextloop</stringProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
