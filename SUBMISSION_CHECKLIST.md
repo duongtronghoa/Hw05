@@ -21,7 +21,7 @@
 | Agent Skill và video demo end-to-end trên một endpoint group để lấy điểm bonus | 6, 9 | `skill/hw05-api-performance/SKILL.md`, `demo.md`, `evidence/video-links.md` | Skill và mô tả demo có; **chưa kiểm độc lập video có thể hiện phần demo skill end-to-end**. |
 | AI Audit có khai báo công cụ, thời gian, prompt, output; Markdown + PDF | 1–2, 6–8 | `ai_audit.md`, `ai_audit.pdf` | Có P00–P14 và QA bổ sung. **Khoảng trống:** các mục AI Output hiện là tóm tắt, không phải toàn văn; cần đối chiếu/xuất hội thoại gốc nếu còn. P14 đã đính chính khẳng định sai về ZIP/Moodle. |
 | AI Critique 200–300 từ; Markdown + PDF | 7–8 | `ai-critique.md`, `ai-critique.pdf` | Có 284 từ phần thân theo khoảng trắng; PDF đọc được, 1 trang. Nội dung đã được AI hỗ trợ biên tập trong lượt QA, cần sinh viên đọc và xác nhận quan điểm của mình. |
-| Git commit log text và README tự chấm + summary | 7–9 | `git-commits.txt`, `README.md` | Có; log cần cập nhật sau commit cuối; bảng tự chấm 30/20/20/10/10/10 = 100. |
+| Git commit log text và README tự chấm + summary | 7–9 | `git-commits.txt`, `README.md` | Có; bản log trong ZIP được tạo sau commit mã nguồn cuối, đối chiếu số dòng với `git rev-list --count HEAD` trong `ZIP_VERIFICATION.md`; bảng tự chấm 30/20/20/10/10/10 = 100. |
 | Nộp Moodle | 8 | Ngoài ZIP | **Chưa có bằng chứng đã nộp; sinh viên tự tải ZIP lên Moodle.** |
 
 ## 2. Cấu trúc dự kiến trong ZIP và lý do giữ từng nhóm

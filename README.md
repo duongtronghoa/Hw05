@@ -48,7 +48,7 @@
 
 * `report.md` & `report.pdf`: Báo cáo chính toàn diện.
 * `ai-critique.md` & `ai-critique.pdf`: Bản nhận xét phản biện phân tích của AI (200–300 từ theo đề).
-* `ai_audit.md` & `ai_audit.pdf`: Nhật ký AI Audit đầy đủ từ P00 đến P14.
+* `ai_audit.md` & `ai_audit.pdf`: Nhật ký AI Audit P00 đến P15 và ghi chú QA.
 * `plans/`: 3 file kịch bản JMeter (.jmx) Load, Stress, Spike.
 * `results/`: 4 thư mục dữ liệu thô (load, stress, spike, soak) chứa `.jtl`, `jmeter.log`, HTML Dashboard và `resources.csv`.
 * `evidence/`: Cấu hình phần cứng, storyboard video, link YouTube và ảnh chụp.

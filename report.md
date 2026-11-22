@@ -192,6 +192,6 @@ Báo cáo này phản ánh trung thực toàn bộ quá trình đo kiểm thực
 >
 > Nguyên tắc cốt lõi tôi rút ra là AI không bao giờ được xem là nguồn chân lý tuyệt đối trong kiểm thử hiệu năng. Kỹ sư phải luôn kiểm chứng chéo từng khẳng định của AI với log thực thi thô và mã nguồn hệ thống.
 
-* **Phụ lục 2: AI Audit Report:** Nhật ký tương tác P00 → P14 tại [ai_audit.md](ai_audit.md) và [ai_audit.pdf](ai_audit.pdf); xem mục QA để biết các lời khai chưa xác minh độc lập.
+* **Phụ lục 2: AI Audit Report:** Nhật ký tương tác P00 → P15 tại [ai_audit.md](ai_audit.md) và [ai_audit.pdf](ai_audit.pdf); xem mục QA để biết các lời khai chưa xác minh độc lập.
 * **Phụ lục 3: Git Commit Log:** Được trích xuất đầy đủ từ lịch sử commit thực tế trong file `git-commits.txt`.
 
