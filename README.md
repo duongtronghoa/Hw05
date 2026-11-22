@@ -14,6 +14,8 @@
 
 Chi tiết endpoint, dữ liệu và các lưu ý kiểm thử: [workflow.md](workflow.md).
 
+Bộ prompt AI dùng từ mục 4 đến khi nộp: [HW05_PROMPTS.md](HW05_PROMPTS.md). Đây là mẫu prompt; AI Audit phải ghi các prompt/output thực tế khi sử dụng.
+
 ## SUT
 
 - Source tham chiếu: `../src/eshop-sut`
